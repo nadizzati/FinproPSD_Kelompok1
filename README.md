@@ -1,1 +1,14 @@
-# FinproPSD_Kelompok1
+# Final Project PSD Kelompok 01
+Kelompok 1 FINPRO PSD
+- EUGENIA HUWAIDA IMTINAN (2406421384)
+- KAYLA JOANNA IRSY KUSUMAH (2406487014)
+- NADIA IZZATI (2406487033)
+- SAFINA AMARINA (2406415665)
+
+*Aslab: Bang Bryan (BH)*
+
+## Background
+
+## Deskripsi Proyek
+
+## Cara Kerja
