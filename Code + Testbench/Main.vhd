@@ -18,6 +18,7 @@ entity Main is
 end Main;
 
 architecture Behavioral of Main is
+    -- State definitions
     type fsm_state is (
         STATE_IDLE, 
         STATE_OPEN_FILE,
@@ -32,6 +33,7 @@ architecture Behavioral of Main is
     
     signal present_state : fsm_state := STATE_IDLE;
     
+    -- Component declarations
     component caesarCipher 
         port (
             char_input       : in  std_logic_vector(7 downto 0);
@@ -49,6 +51,7 @@ architecture Behavioral of Main is
         );
     end component;
 
+    -- Signals
     signal byte_input : std_logic_vector(7 downto 0);
     signal caesar_result, hill_result : std_logic_vector(7 downto 0);
     signal proc_mode : std_logic;
@@ -57,6 +60,7 @@ architecture Behavioral of Main is
     constant SHIFT_KEY : integer := 3;
 
 begin
+    -- Component instantiations
     caesar_unit : caesarCipher port map (
         char_input => byte_input,
         enc_dec_mode => proc_mode,
@@ -70,13 +74,16 @@ begin
         data_out => hill_result
     );
 
+    -- Output assignments
     done_signal <= completion_flag;
     error_signal <= error_flag;
     
+    -- Debug signal assignments
     debug_input <= byte_input;
     debug_caesar <= caesar_result;
     debug_hill <= hill_result;
 
+    -- Main state machine
     fsm_process: process(clock_sig, reset_sig)
         file src_file  : text;
         file temp_file : text;
@@ -133,25 +140,25 @@ begin
                     end if;
 
                 when STATE_HILL_OP =>
-                    if proc_mode = '1' then
+                    if proc_mode = '1' then  -- Decryption: Hill 1
                         byte_input <= hill_result;
                         write(txt_line_out, character'val(to_integer(unsigned(hill_result))));
                         writeline(temp_file, txt_line_out);
                         present_state <= STATE_CAESAR_OP;
-                    else
-                        byte_input <= caesar_result;
+                    else  -- Encryption: Hill 2
+                        byte_input <= hill_result;
                         write(txt_line_out, character'val(to_integer(unsigned(hill_result))));
                         writeline(dest_file, txt_line_out);
                         present_state <= STATE_WRITE_RESULT;
                     end if;
                 
                 when STATE_CAESAR_OP =>
-                    if proc_mode = '1' then
+                    if proc_mode = '1' then  -- Decryption: Caesar 2
                         byte_input <= caesar_result;
                         write(txt_line_out, character'val(to_integer(unsigned(caesar_result))));
                         writeline(dest_file, txt_line_out);
                         present_state <= STATE_WRITE_RESULT;
-                    else
+                    else  -- Encryption: Caesar 1
                         byte_input <= caesar_result;
                         write(txt_line_out, character'val(to_integer(unsigned(caesar_result))));
                         writeline(temp_file, txt_line_out);
