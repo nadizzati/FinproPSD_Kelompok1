@@ -23,14 +23,14 @@ architecture Behavioral of MainTB is
 
     signal sys_clock       : STD_LOGIC := '0';
     signal sys_reset       : STD_LOGIC := '0';
-    signal sys_mode        : STD_LOGIC := '1'; 
+    signal sys_mode        : STD_LOGIC := '0';
     signal sys_start       : STD_LOGIC := '0';
     signal sys_done        : STD_LOGIC := '0';
     signal sys_error       : STD_LOGIC := '0';
-
     signal mon_input       : STD_LOGIC_VECTOR(7 downto 0);
     signal mon_caesar      : STD_LOGIC_VECTOR(7 downto 0);
     signal mon_hill        : STD_LOGIC_VECTOR(7 downto 0);
+    
     signal char_input      : character := ' ';
     signal char_caesar     : character := ' ';
     signal char_hill       : character := ' ';
@@ -46,8 +46,8 @@ begin
         done_signal => sys_done,
         error_signal => sys_error,
         debug_input => mon_input,
-        debug_caesar => mon_hill, 
-        debug_hill => mon_caesar 
+        debug_caesar => mon_caesar,
+        debug_hill => mon_hill
     );
     
     char_input <= character'val(to_integer(unsigned(mon_input))) when (mon_input >= x"20" and mon_input <= x"7E") else ' ';
@@ -105,7 +105,7 @@ begin
             file_close(result_file);
 
             if result_string /= expected_text then
-                report "Got:       " & result_string severity note;
+                report "Got:      " & result_string severity note;
             else
                 report "Output matches expected data" severity note;
             end if;
@@ -127,7 +127,7 @@ begin
         wait until sys_done = '1';
         wait for CLOCK_PERIOD;
 
-        verify_output(true, "yjsyh"); 
+        verify_output(true, "yjssh");
 
         sys_reset <= '1';
         wait for CLOCK_PERIOD;
