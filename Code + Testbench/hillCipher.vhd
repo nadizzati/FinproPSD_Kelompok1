@@ -15,9 +15,10 @@ architecture Behavioral of hillCipher is
     constant DECRYPT_KEY : integer := 21;
     
     function mod26(val : integer) return integer is
+        variable result : integer;
 
     begin
-        result := val mod 25;
+        result := val mod 26;
         while result < 0 loop
             result := result + 26;
         end loop;
